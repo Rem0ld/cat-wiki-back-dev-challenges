@@ -21,3 +21,15 @@ type TResultService<T> = {
   total: number;
   data: T[];
 };
+
+type TSearchTerm = {
+  id: string;
+  name: string;
+  count: number;
+};
+
+type TNode = {
+  value: string;
+  isWord: boolean;
+  nodes: TNode[];
+};

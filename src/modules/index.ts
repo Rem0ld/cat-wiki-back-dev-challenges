@@ -1,5 +1,5 @@
-import SampleController from "./Sample/index";
+import CatController from "./Cat/index";
 
-const routes = [SampleController];
+const routes = [CatController];
 
 export default routes;
