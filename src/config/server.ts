@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import { Server } from "@overnightjs/core";
 import { logger } from "../utils/logger/logger";
@@ -14,6 +15,7 @@ export default class MyServer extends Server {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(morgan("combined"));
+    this.app.use(cors());
     this.setupController();
   }
 
