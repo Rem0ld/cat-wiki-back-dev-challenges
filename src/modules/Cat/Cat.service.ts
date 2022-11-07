@@ -6,6 +6,7 @@ export default class CatService {
   private breeds = "breeds";
   private images = "images/search";
   private limit = 10;
+  private limitImage = 8;
   // if repo include repo here
   constructor() {}
 
@@ -15,7 +16,13 @@ export default class CatService {
 
     cache.set(
       "breed",
-      result.map((el: any) => ({ id: el.id, name: el.name, count: 0 }))
+      result.map((el: any) => ({
+        id: el.id,
+        name: el.name,
+        description: el.description,
+        image: el.image,
+        count: 0,
+      }))
     );
   }
 
@@ -27,6 +34,7 @@ export default class CatService {
     }
 
     return mostSearched
+      .filter(el => el.count > 0)
       .sort((a, b) => {
         if (a.count > b.count) {
           return -1;
@@ -39,8 +47,13 @@ export default class CatService {
   }
 
   async getBreed(breed: string) {
-    const response = await fetch(`${CAT_API_BASE_URL}${this.breeds}/${breed}`);
+    let response = await fetch(`${CAT_API_BASE_URL}${this.breeds}/${breed}`);
     const result = await response.json();
+    response = await fetch(
+      `${CAT_API_BASE_URL}images/${result.reference_image_id}`
+    );
+    const image = await response.json();
+
     let mostSearched: any[] = cache.get("breed");
 
     if (!mostSearched) {
@@ -58,6 +71,10 @@ export default class CatService {
       })
     );
 
+    result.image = {
+      id: image.id,
+      url: image.url,
+    };
     return result;
   }
 
@@ -76,8 +93,8 @@ export default class CatService {
     return result;
   }
 
-  async getAllImages(breed: string, page: number) {
-    const url = `${CAT_API_BASE_URL}${this.images}?limit=${this.limit}&page=${page}&breed_ids=${breed}&api_key=${process.env.CAT_API_KEY}`;
+  async getAllImages(breedId: string, page: number) {
+    const url = `${CAT_API_BASE_URL}${this.images}?limit=${this.limitImage}&page=${page}&breed_ids=${breedId}&api_key=${process.env.CAT_API_KEY}`;
     const response = await fetch(url);
     const result = await response.json();
     const urls = result.reduce((acc: string[], el: any) => {

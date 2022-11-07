@@ -41,10 +41,11 @@ export default class CatController {
     return;
   }
 
-  @Get("images")
+  @Get("images/:breed_id")
   private async getImages(req: Request, res: Response, next: NextFunction) {
-    const { breed, page } = req.query;
-    const result = await this.service.getAllImages(breed.toString(), +page);
+    const { breed_id } = req.params;
+    const { page } = req.query;
+    const result = await this.service.getAllImages(breed_id, +page || 0);
 
     res.json(result);
     return;
