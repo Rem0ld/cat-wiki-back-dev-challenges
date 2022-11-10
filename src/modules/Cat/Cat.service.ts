@@ -79,18 +79,26 @@ export default class CatService {
   }
 
   async get4Breeds() {
-    const response = await fetch(CAT_API_BASE_URL + this.breeds + "?limit=4");
-    const result = await response.json();
+    try {
+      const response = await fetch(CAT_API_BASE_URL + this.breeds + "?limit=4");
+      const result = await response.json();
 
-    return result;
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getAllBreeds(page: number) {
     const url = `${CAT_API_BASE_URL}${this.breeds}?limit=${this.limit}&page=${page}&api_key=${process.env.CAT_API_KEY}`;
-    const response = await fetch(url);
-    const result = await response.json();
+    try {
+      const response = await fetch(url);
+      const result = await response.json();
 
-    return result;
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getAllImages(breedId: string, page: number) {
